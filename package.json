@@ -1,0 +1,34 @@
+{
+  "name": "usuarios-login",
+  "version": "1.0.0",
+  "description": "Gention de usuarios y login para sistema ELAISS",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --exit",
+    "start": "node src/server.js"
+  },
+  "keywords": [],
+  "author": "Leandro Roidzaid",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "cookie-parser": "^1.4.4",
+    "ejs": "^2.7.1",
+    "express": "^4.17.1",
+    "express-static": "^1.2.6",
+    "mocha": "^6.2.0",
+    "mysql": "^2.17.1",
+    "swagger-jsdoc": "^3.4.0",
+    "swagger-ui-express": "^4.1.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LeanRoidzaid/ORTCA-Usuarios.git"
+  },
+  "bugs": {
+    "url": "https://github.com/LeanRoidzaid/ORTCA-Usuarios/issues"
+  },
+  "homepage": "https://github.com/LeanRoidzaid/ORTCA-Usuarios#readme"
+}
