@@ -2,11 +2,11 @@ require("./config/config");
 
 const express = require('express');
 const app = express();
-
 const bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({ extended: false }));
+
 // parse application/json
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 /*
 **********  CONFIGURACION DE SWAGGER  **************
@@ -46,6 +46,8 @@ app.use('/api-docs-usuarios', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 **********  FIN CONFIGURACION DE SWAGGER  **************
 */
 app.use("/api/usuarios/", require('./api/controllers/controllers_usuarios'));
+app.use("/api/login/", require('./api/controllers/controllers_login'));
+app.use("/api/roles/", require('./api/controllers/controllers_roles'));
 app.use('/html', express.static('src/api/views'));
 
 //ahora toma el puerto del archivo config/config.js

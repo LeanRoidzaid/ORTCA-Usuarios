@@ -1,5 +1,5 @@
 let chai = require("chai");
-let chaihttp = require("chai-http");
+let chaihttp = require("chai-http");        
 //incluir el server.js para que mocha pueda ejecutar las pruebas
 let server = require("../src/server");
 let should = chai.should();

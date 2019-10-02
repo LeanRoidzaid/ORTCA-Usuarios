@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const dbConnection = require('../../config/dbConnection');
-
+const usuarios = require('../models/models_usuarios');
 
 /**
  * @swagger
@@ -9,7 +9,7 @@ const dbConnection = require('../../config/dbConnection');
  *   get:
  *     tags:
  *       - all
- *     description: Busca en Mysql a todos los beneficiarios
+ *     description: Busca en Mysql a todos los usuario
  *     produces:
  *       - application/json
  *     responses:
@@ -22,22 +22,96 @@ const dbConnection = require('../../config/dbConnection');
 
 app.get("/all", function(req, res) {
     
-    const connect = dbConnection();
+    usuarios.findAll({ attributes: ['nombre', 'apellido'] })
+        .then(users => {
+            console.log(users);
+            res.send(users);
 
-    connect.query("SELECT nombre, apellido, telefono FROM beneficiarios", function(err, result){
-        console.log(result);
-        if (err) {
-            return res.status(400).json({
-                ok: false,
-                err
-            });
-            }
-            res.json({
-            ok: true,
-            result
-        });    
-    });
+         })
+        .catch(err => {
+            console.log(err);
+            res.send(err);
+         })
 });
+
+/**
+ * @swagger
+ * /api/usuarios/usuario:
+ *   get:
+ *     tags:
+ *       - all
+ *     description: Busca en Mysql los datos del usuario por el usuario
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: devuelve json con la busqueda
+ *       400:
+ *         description: devuelve json avisando del error
+ *
+ */
+
+app.get("/usuario", function(req, res) {
+    
+    usuarios.findAll({
+        where: {
+            usuario: req.body.usuario
+        }
+    })
+        .then(users => {
+            console.log(users);
+            res.send(users);
+
+         })
+        .catch(err => {
+            console.log(err);
+            res.send(err);
+         })
+});
+
+/**
+ * @swagger
+ * /api/usuarios/porDatos:
+ *   get:
+ *     tags:
+ *       - all
+ *     description: Busca en Mysql los datos del usuario por DNI, nombre, mail o por CAPS
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: devuelve json con la busqueda
+ *       400:
+ *         description: devuelve json avisando del error
+ *
+ */
+
+app.get("/porDatos", function(req, res) {
+    
+    usuarios.findAll({
+        where: {
+            $or:{nombre: req.body.nombre,
+            apellido: req.body.apellido,
+            dni: req.body.dni ,
+            mail: req.body.mail,  
+            usuario: req.body.usuario,
+            pass: req.body.pass,
+            fh_alta: req.body.fh_alta,
+            fh_baja: req.body.fh_baja,
+            idCentro: req.body.idCentro}
+        }
+    })
+        .then(users => {
+            console.log(users);
+            res.send(users);
+
+         })
+        .catch(err => {
+            console.log(err);
+            res.send(err);
+         })
+});
+
 
 /**
  * @swagger
@@ -59,16 +133,29 @@ app.get("/all", function(req, res) {
  *             apellido:
  *               type: string
  *             dni:
- *               type: integer
- *             fechaNac:
  *               type: string
- *             telefono:
- *               type: integer 
+ *             mail:
+ *               type: string
+ *             usuario:
+ *               type: string 
+ *             pass:
+ *               type: string 
+ *             fh_alta:
+ *               type: string
+ *             fh_baja:
+ *               type: string
+ *             idCentro:
+ *               type: integer
  *         required:
  *           - nombre
  *           - apellido
  *           - dni
- *           - fechaNac
+ *           - mail
+ *           - usuario
+ *           - pass
+ *           - fh_alta
+ *           - fh_baja
+ *           - id_centro
  *     responses:
  *       200:
  *         description: Beneficiarios insertado en tabla Mysql con exito
@@ -78,39 +165,103 @@ app.get("/all", function(req, res) {
  *         description: Ocurrio un error al guardar el beneficiarios en Mysql
  */
 
-app.post("/alta", function(req, res) {
-
-    var nom     = req.body.nombre;
-    var ape     = req.body.apellido;
-    var doc     = req.body.dni;
-    var fecNac  = req.body.fechaNac;
-    var tel     = req.body.telefono
-
-    const connect = dbConnection();
-
-    connect.query('INSERT INTO beneficiarios SET ?',{
-        nombre: nom,
-        apellido: ape,
-        dni: doc,
-        fechaNac: fecNac,
-        telefono: tel
-        }, function(err, result){
-        
-        console.log(result);
-        
-        if (err) {
-            return res.status(400).json({
-                ok: false,
-                err
-                });
-            }
-            res.json({
-                ok: true,
-                result
-                });    
-        });
+app.post('/alta', function (request, response) {
+    return usuarios.create({
+     nombre: request.body.nombre,
+     apellido: request.body.apellido,
+     dni: request.body.dni,
+     mail: request.body.mail,
+     usuario: request.body.usuario,
+     pass: request.body.pass,
+     fh_alta: request.body.fh_alta,
+     fh_baja: request.body.fh_baja,
+     idCentro: request.body.idCentro
+    }).then(function (users) {
+        if (users) {
+            response.send(users);
+            console.log(users);
+        } else {
+            response.status(400).send('Error en el insert de usuario');
+            console.log(err)
+        }
+    });
 });
 
+/**
+ * @swagger
+ * /api/usuarios/actualizar:
+ *   post:
+ *     tags:
+ *       - update
+ *     produces:
+ *       - application/json
+ *     consumes:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           properties:
+ *             nombre:
+ *               type: string
+ *             apellido:
+ *               type: string
+ *             dni:
+ *               type: string
+ *             mail:
+ *               type: string
+ *             usuario:
+ *               type: string 
+ *             pass:
+ *               type: string 
+ *             fh_alta:
+ *               type: string
+ *             fh_baja:
+ *               type: string
+ *             idCentro:
+ *               type: integer
+ *         required:
+ *           - nombre
+ *           - apellido
+ *           - dni
+ *           - mail
+ *           - usuario
+ *           - pass
+ *           - fh_alta
+ *           - fh_baja
+ *           - id_centro 
+ *     responses:
+ *       200:
+ *         description: Beneficiarios insertado en tabla Mysql con exito
+ *       401:
+ *         description: Token invalido, no tiene permisos para ejecutar esta api
+ *       400:
+ *         description: Ocurrio un error al guardar el beneficiarios en Mysql
+ */
+
+app.post('/actualizar', function (request, response) {
+    return usuarios.update({
+     nombre: request.body.nombre,
+     apellido: request.body.apellido,
+     dni: request.body.dni,
+     mail: request.body.mail,
+     usuario: request.body.usuario,
+     pass: request.body.pass,
+     fh_alta: request.body.fh_alta,
+     fh_baja: request.body.fh_baja,
+     idCentro: request.body.idCentro
+    },{
+        where:{
+            id: request.body.id 
+        }
+    }).then(function (users) {
+        if (users) {
+            response.send(users);
+        } else {
+            response.status(400).send('Error en el insert de usuario');
+        }
+    });
+});
 
 module.exports = app;
 
