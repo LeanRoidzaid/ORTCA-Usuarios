@@ -1,11 +1,10 @@
-// ============================
-//  Puerto
-// ============================
-process.env.PORT = process.env.PORT || 3000;
+const fs = require('fs')
 
-// ============================
-//  Entorno
-// ============================
-process.env.NODE_ENV = process.env.NODE_ENV || "dev";
+let cachedConfig = null
+if (!cachedConfig) {
+    const env = process.env.NODE_ENV || 'development'
+    const configPath = __dirname + '/' + env + '.json'
+    cachedConfig = JSON.parse(fs.readFileSync(configPath))
+}
 
-process.env.CLAVEJWT = process.env.CLAVEJWT || "123456";
+module.exports = cachedConfig

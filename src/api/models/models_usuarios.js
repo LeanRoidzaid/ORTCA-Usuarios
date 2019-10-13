@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize')
 const sequelize = require('../../config/dbConnection');
 const bcrypt = require('bcrypt');
+const Roles = require('./models_usuario_rol')
 
 const Usuario = sequelize.define('usuarios', {
      id: {type: Sequelize.INTEGER, primaryKey: true},
@@ -16,8 +17,6 @@ const Usuario = sequelize.define('usuarios', {
      },{timestamps: false});
 
      Usuario.beforeCreate((usuarios, options) => {
-
-      
       return bcrypt.hash(usuarios.pass, 2)
       .then(hash => {
           usuarios.pass = hash;
@@ -26,7 +25,7 @@ const Usuario = sequelize.define('usuarios', {
           console.log(err);
           throw new Error(); 
       });
-      
   });
    
+Usuario.hasMany(Roles, { foreignKey: 'idUsuario' })
 module.exports = Usuario; 

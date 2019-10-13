@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --exit",
-    "start": "node src/server.js"
+    "start": "nodemon src/server.js"
   },
   "keywords": [],
   "author": "Leandro Roidzaid",
@@ -19,13 +19,16 @@
     "ejs": "^2.7.1",
     "express": "^4.17.1",
     "express-static": "^1.2.6",
+    "fs": "0.0.1-security",
     "jsonwebtoken": "^8.5.1",
     "mocha": "^6.2.0",
     "mysql": "^2.17.1",
     "mysql-model": "git://github.com/michalkow/node-mysql-model.git",
     "mysql2": "^1.7.0",
+    "nodemon": "^1.19.3",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
+    "path": "^0.12.7",
     "sequelize": "^5.19.0",
     "swagger-jsdoc": "^3.4.0",
     "swagger-ui-express": "^4.1.1"

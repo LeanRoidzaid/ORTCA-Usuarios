@@ -1,51 +1,72 @@
 const express = require("express");
 const app = express();
 var jwt = require("jsonwebtoken");
+const Sequelize = require('sequelize')
 const dbConnection = require('../../config/dbConnection');
 const usuarios = require('../models/models_usuarios');
+const config = require('../../config/config')
 const bcrypt = require('bcrypt');
+const UserRoles = require('../models/models_usuario_rol')
+const Roles = require('../models/models_roles')
 
 app.post("/", async function(req, res) {
-  usuarios.findOne({
-  where: {
-        usuario: req.body.usuario
+  const { usuario, pass } = req.body
+  if (!usuario || !pass) {
+    res.status(401).send({
+      error: "usuario y pass son requeridos."
+    })
+  } else {
+    usuarios
+    .findOne({
+        // attributes: ['discoverySource'],
+        where: {
+          usuario: req.body.usuario
+        },
+        include: [{
+            model: UserRoles,
+        }]
+    })
+    .then(async (u) => {
+      const roles = await Roles.findAll({
+        where: {
+          id: {
+            [Sequelize.Op.in]: (u.usuario_roles || []).map(ur => String(ur.idRol))
+          }
         }
-        })
+      })
+
+      u.roles = roles
+      u.jo = 1
+
+      return Promise.resolve(u)
+    })
     .then(user => {
-        //console.log(users);
-        //res.send(users);
         if (!user) {
           res.send('Incorrect user');
-          //res.redirect('/');
+
           return;
-       } else {
-        
-        bcrypt.compare(req.body.pass, user.pass, function (err, result) {
-          
-          if (result == true) {
-            //res.send('login correcto');
-            //return;
-            
-            var tokenData = { username: user,ultimoLogin:new Date() };
-            var token = jwt.sign(tokenData, process.env.CLAVEJWT, {
-              expiresIn: 60 * 60 * 24 // expira en 24 horas
-            });
-                  
-            res.status(200).send({
-              token
-            });
-          } else {
-            res.status(401).send({
-              error: "usuario o contraseña inválidos"
-            });
-            //res.send('Incorrect password ' + req.body.pass +' '+ user.pass + ' ' + result);
-            //res.
-            //res.redirect('/');
-            //return;
-          }
-        });    
+        } else {
+          const roles = user.roles
+          bcrypt.compare(req.body.pass, user.pass, function (err, result) {
+            if (result == true) {
+              //res.send('login correcto');
+              //return;
+              
+              const tokenData = { username: user, roles, ultimoLogin:new Date() };
+              const token = jwt.sign(tokenData, String(config.CLAVEJWT), {
+                expiresIn: 60 * 60 * 24 // expira en 24 horas
+              });
+                    
+              res.status(200).send({ token });
+            } else {
+              res.status(401).send({
+                error: "usuario o contraseña inválidos"
+              });
+            }
+          });    
       };
     });
+  }
 });
 
      

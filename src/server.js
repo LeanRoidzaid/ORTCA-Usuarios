@@ -4,6 +4,9 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 
+// Env Config
+const config = require('./config/config')
+
 // parse application/json
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -23,7 +26,7 @@ const swaggerDefinition = {
     version: "1.0.0",
     description: "API USUARIOS - ELAISS"
   },
-  host: "localhost:" + process.env.PORT,
+  host: "localhost:" + config.PORT,
   basePath: "/"
 };
 
@@ -51,9 +54,9 @@ app.use("/api/roles/", require('./api/controllers/controllers_roles'));
 app.use('/html', express.static('src/api/views'));
 
 //ahora toma el puerto del archivo config/config.js
-app.listen(process.env.PORT, function() {
+app.listen(config.PORT, function() {
   console.log(
-    "Servidor express iniciado en el puerto " + process.env.PORT + "!"
+    "Servidor express iniciado en el puerto " + config.PORT + "!"
     );
   });
   
