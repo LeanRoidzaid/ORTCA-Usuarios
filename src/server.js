@@ -48,9 +48,9 @@ app.use('/api-docs-usuarios', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 /*
 **********  FIN CONFIGURACION DE SWAGGER  **************
 */
-app.use("/api/usuarios/", require('./api/controllers/controllers_usuarios'));
-app.use("/api/login/", require('./api/controllers/controllers_login'));
-app.use("/api/roles/", require('./api/controllers/controllers_roles'));
+app.use("/api/usuarios/", require('./api/routers/routers_usuarios'));
+app.use("/api/login/", require('./api/routers/routers_login'));
+app.use("/api/roles/", require('./api/routers/routers_roles'));
 app.use('/html', express.static('src/api/views'));
 
 //ahora toma el puerto del archivo config/config.js
