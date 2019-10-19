@@ -33,7 +33,7 @@ const swaggerDefinition = {
 //donde va a "mirar" swagger para exponer la doc
 const options = {
   swaggerDefinition,
-  apis: ['./src/api/controllers/*.js'],
+  apis: ['./src/api/routers/*.js'],
   customCss: '.swagger-ui .topbar { display: none }'
 };
 
