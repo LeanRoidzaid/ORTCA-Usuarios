@@ -24,7 +24,7 @@ const { verificaTokenMiddleware } = require("../middlewares/verificaTokenMiddlew
  *
  */
 
-app.post("/", verificaTokenMiddleware,async function(req, res) {
+app.post("/",async function(req, res) {
   const { usuario, pass } = req.body
   if (!usuario || !pass) {
     res.status(401).send({
