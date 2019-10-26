@@ -1,7 +1,9 @@
 const express = require("express");
 const app = express();
 const roles = require('../controllers/controllers_roles');
-const  verificaRol  = require("../middlewares/varificaRolMiddleware");
+const  verificaRol  = require("../middlewares/verificaRolMiddleware");
+const  verificaToken  = require("../middlewares/verificaTokenMiddleware");
+
 
 /**
  * @swagger
@@ -20,7 +22,7 @@ const  verificaRol  = require("../middlewares/varificaRolMiddleware");
  *
  */
 
-app.get("/all", verificaRol.esAdministradorMiddleware,function(req, res) {
+app.get("/all", verificaToken.verificaTokenMiddleware, verificaRol.esAdministradorMiddleware,function(req, res) {
     
     let result = roles.listarRoles()
     result.then(roles => {
@@ -66,8 +68,7 @@ app.get("/all", verificaRol.esAdministradorMiddleware,function(req, res) {
  *         description: Ocurrio un error al guardar el beneficiarios en Mysql
  */
 
-app.post('/asignarRoles', verificaRol.esAdministradorMiddleware,function (req, res) {
-    
+app.post('/asignarRoles', verificaToken.verificaTokenMiddleware, verificaRol.esAdministradorMiddleware,function (req, res) {
     let result = roles.asignarRoles(req.body)
     result.then(roles => {
        console.log(roles);
@@ -112,11 +113,11 @@ app.post('/asignarRoles', verificaRol.esAdministradorMiddleware,function (req, r
  *         description: Ocurrio un error al guardar el beneficiarios en Mysql
  */
 
-app.post('/quitarRol', verificaRol.esAdministradorMiddleware,function (req, res) {
+app.post('/quitarRol', verificaToken.verificaTokenMiddleware, verificaRol.esAdministradorMiddleware,function (req, res) {
     let result = roles.quitarRol(req.body)
     result.then(roles => {
        console.log(roles);
-        res.send(roles)
+       res.send("Rol eliminado");
     })
     .catch(err => {
         console.log(err);

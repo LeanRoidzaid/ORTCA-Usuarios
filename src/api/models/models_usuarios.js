@@ -25,7 +25,7 @@ const Usuario = sequelize.define('usuarios', {
           console.log(err);
           throw new Error(); 
       });
-  });
+    });
    
 Usuario.hasMany(Roles, { foreignKey: 'idUsuario' })
 module.exports = Usuario; 

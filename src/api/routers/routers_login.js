@@ -1,12 +1,12 @@
 const express = require("express");
 const app = express();
 var jwt = require("jsonwebtoken");
+const Sequelize = require('sequelize')
 const usuarios = require('../models/models_usuarios');
-const config = require('../../config/config')
 const bcrypt = require('bcrypt');
 const UserRoles = require('../models/models_usuario_rol')
 const Roles = require('../models/models_roles')
-const { verificaTokenMiddleware } = require("../middlewares/verificaTokenMiddleware");
+const usuario = require('../controllers/controllers_usuarios');
 /**
  * @swagger
  * /api/login:
@@ -42,6 +42,7 @@ app.post("/",async function(req, res) {
         }]
     })
     .then(async (u) => {
+        if(u.usuario_roles.length != 0){
         const roles = await Roles.findAll({
         where: {
           id: {
@@ -54,6 +55,7 @@ app.post("/",async function(req, res) {
       u.jo = 1
 
       return Promise.resolve(u)
+        }
     })
     .then(user => {
         if (!user) {
@@ -68,7 +70,7 @@ app.post("/",async function(req, res) {
               //return;
               
               const tokenData = { username: user, roles, ultimoLogin:new Date() };
-              const token = jwt.sign(tokenData, String(config.CLAVEJWT), {
+              const token = jwt.sign(tokenData, String(process.env.CLAVEJWT), {
                 expiresIn: 60 * 60 * 24 // expira en 24 horas
               });
                     
@@ -84,5 +86,17 @@ app.post("/",async function(req, res) {
   }
 });
 
-     
+app.post("/recuperarPass",async function(req, res) {
+
+    let result = usuario.enviarNuevaPass(req.body.usuario);
+    result.then(mail => {
+        console.log("se envio un mail al usuario: " + req.body.usuario);
+        res.send("se envio un mail al usuario: " + req.body.usuario);
+    }).catch(err => { 
+      console.log(err);
+      res.status(400).send("Usuario en incorrectos");
+      throw err;
+    });
+});
+
 module.exports = app;
