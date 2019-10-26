@@ -10,7 +10,7 @@ const  verificaToken  = require("../middlewares/verificaTokenMiddleware");
  * /api/roles/all:
  *   get:
  *     tags:
- *       - Todos los roles
+ *       - Listar roles
  *     description: Busca en Mysql a todos los roles disponibles
  *     produces:
  *       - application/json

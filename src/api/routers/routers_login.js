@@ -86,6 +86,23 @@ app.post("/",async function(req, res) {
   }
 });
 
+/**
+ * @swagger
+ * /api/login/recuperarPass:
+ *   post:
+ *     tags:
+ *       - Recuperar Pass
+ *     description: Se envia una pass provisoria por mail y el usuario debe volver a cambiarla
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: nueva pass enviada
+ *       400:
+ *         description: error recuparacion de pass
+ *
+ */
+
 app.post("/recuperarPass",async function(req, res) {
 
     let result = usuario.enviarNuevaPass(req.body.usuario);

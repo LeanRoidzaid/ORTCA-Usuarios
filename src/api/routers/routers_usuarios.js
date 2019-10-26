@@ -10,7 +10,7 @@ const  verificaToken  = require("../middlewares/verificaTokenMiddleware");
  * /api/usuarios/all:
  *   get:
  *     tags:
- *       - Todos los usuarios
+ *       - listar usuarios
  *     description: Busca en Mysql a todos los usuario
  *     produces:
  *       - application/json
@@ -75,7 +75,7 @@ app.get("/usuario", verificaToken.verificaTokenMiddleware, verificaRol.esAdminis
  * /api/usuarios/usuarioToken:
  *   get:
  *     tags:
- *       - Buscar un usuario
+ *       - Ver usuario token
  *     description: devuelve el usuarios del token
  *     produces:
  *       - application/json
