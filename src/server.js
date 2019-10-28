@@ -5,7 +5,8 @@ const app = express();
 const bodyParser = require('body-parser');
 
 // Env Config
-const config = require('./config/config')
+const config = require('./config/config');
+process.env.CLAVEJWT = "123456";
 
 // parse application/json
 app.use(bodyParser.json());
@@ -26,7 +27,7 @@ const swaggerDefinition = {
     version: "1.0.0",
     description: "API USUARIOS - ELAISS"
   },
-  host: "localhost:" + config.PORT,
+  host: "localhost:" + process.env.PORT,
   basePath: "/"
 };
 

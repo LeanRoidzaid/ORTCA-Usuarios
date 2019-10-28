@@ -1,14 +1,16 @@
 const express = require("express");
 const app = express();
 const usuarios = require('../controllers/controllers_usuarios');
-const  verificaRol  = require("../middlewares/varificaRolMiddleware");
+const  verificaRol  = require("../middlewares/verificaRolMiddleware");
+const  verificaToken  = require("../middlewares/verificaTokenMiddleware");
+
 
 /**
  * @swagger
  * /api/usuarios/all:
  *   get:
  *     tags:
- *       - Todos los usuarios
+ *       - listar usuarios
  *     description: Busca en Mysql a todos los usuario
  *     produces:
  *       - application/json
@@ -20,7 +22,8 @@ const  verificaRol  = require("../middlewares/varificaRolMiddleware");
  *
  */
 
-app.get("/all", verificaRol.esAdministradorMiddleware,function(req, res) {
+app.get("/all", verificaToken.verificaTokenMiddleware, verificaRol.esAdministradorMiddleware,
+    function(req, res) {
     
     let result = usuarios.listarUsuarios()
     result.then(users => {
@@ -51,13 +54,14 @@ app.get("/all", verificaRol.esAdministradorMiddleware,function(req, res) {
  *
  */
 
-app.get("/usuario", verificaRol.esAdministradorMiddleware,function(req, res) {
+app.get("/usuario", verificaToken.verificaTokenMiddleware, verificaRol.esAdministradorMiddleware,
+    function(req, res) {
     
     let result = usuarios.buscarUsuario(req.body.usuario)
     result.then(users => {
         console.log(users);
         res.send(users)
-         
+        
     })
     .catch(err => {
         console.log(err);
@@ -65,6 +69,27 @@ app.get("/usuario", verificaRol.esAdministradorMiddleware,function(req, res) {
     })
     
 });
+
+/**
+ * @swagger
+ * /api/usuarios/usuarioToken:
+ *   get:
+ *     tags:
+ *       - Ver usuario token
+ *     description: devuelve el usuarios del token
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: devuelve json con el usuarios
+ *       400:
+ *         description: devuelve json avisando del error
+ *
+ */
+app.get('/usuarioToken', verificaToken.verificaTokenMiddleware, function(req, res){
+    console.log(req.tokenDesencriptado.datostoken.username);
+        res.send(req.tokenDesencriptado.datostoken.usuario);  
+})
 
 /**
  * @swagger
@@ -118,7 +143,8 @@ app.get("/usuario", verificaRol.esAdministradorMiddleware,function(req, res) {
  *         description: Ocurrio un error al guardar el beneficiarios en Mysql
  */
 
-app.post('/alta', verificaRol.esAdministradorMiddleware, function (req, res) {
+app.post('/alta', verificaToken.verificaTokenMiddleware, verificaRol.esAdministradorMiddleware,
+    function (req, res) {
     let result = usuarios.insertarUsuario(req.body)
     result.then(users => {
         console.log(users);
@@ -127,8 +153,7 @@ app.post('/alta', verificaRol.esAdministradorMiddleware, function (req, res) {
     })
     .catch(err => {
         console.log(err);
-        res.status(400).send('Error en el insert de usuario');
-        throw err;
+        res.status(400).send('Error en el insert de usuario' + err.message);
     })
 })
     
@@ -184,7 +209,8 @@ app.post('/alta', verificaRol.esAdministradorMiddleware, function (req, res) {
  *         description: Ocurrio un error al guardar el beneficiarios en Mysql
  */
 
-app.post('/actualizar', verificaRol.esAdministradorMiddleware, function (req, res) {
+app.post('/actualizar', verificaToken.verificaTokenMiddleware, verificaRol.esAdministradorMiddleware, 
+    function (req, res) {
     let result = usuarios.updateUsuario(req.body)
     result.then(users => {
         console.log(users);
@@ -194,6 +220,20 @@ app.post('/actualizar', verificaRol.esAdministradorMiddleware, function (req, re
     .catch(err => { 
         console.log(err);
         res.status(400).send('Error en el update de usuario');
+        throw err;
+    })
+})
+
+app.post('/cambiarPass', verificaToken.verificaTokenMiddleware, verificaRol.esAdministradorMiddleware, 
+    function (req, res) {
+    let result = usuarios.updatePass(req.body)
+    result.then(users => {
+        console.log(users);
+        res.send(users)
+    })
+    .catch(err => { 
+        console.log(err);
+        res.status(400).send('Error en al cambiar la cantrasena');
         throw err;
     })
 })

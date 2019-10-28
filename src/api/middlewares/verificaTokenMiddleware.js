@@ -10,7 +10,7 @@ exports.verificaTokenMiddleware = async function(req, res, next) {
         .json({ error: "Es necesario el token de autenticación" });
     }
   
-    var resultado = await jwt.verify(token, config.CLAVEJWT, function(
+    var resultado = await jwt.verify(token, process.env.CLAVEJWT, function(
       err,
       datostoken
     ) {
