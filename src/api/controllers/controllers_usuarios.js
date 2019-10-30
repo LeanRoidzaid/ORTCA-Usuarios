@@ -30,22 +30,26 @@ exports.insertarUsuario = function(usuario){
 }
 
 exports.updateUsuario = async function(usuario){
+    return USUARIOS.update({
+        nombre: usuario.nombre,
+        apellido: usuario.apellido,
+        dni: usuario.dni,
+        mail: usuario.mail,
+        usuario: usuario.usuario,
+        fh_alta: usuario.fh_alta,
+        fh_baja: usuario.fh_baja,
+        idCentro: usuario.idCentro},
+        {where: {id:usuario.id}}
+)}
+
+exports.updatePass = async function(usuario){
     const bcrypt = require('bcrypt');
     return bcrypt.hash(usuario.pass, 2)
     .then(hash => {
         return USUARIOS.update({
-            nombre: usuario.nombre,
-            apellido: usuario.apellido,
-            dni: usuario.dni,
-            mail: usuario.mail,
-            usuario: usuario.usuario,
-            pass: hash,
-            fh_alta: usuario.fh_alta,
-            fh_baja: usuario.fh_baja,
-            idCentro: usuario.idCentro},
-            {where: {id:usuario.id}}
+            pass: hash},
+            {where: {usuario:usuario.usuario}}
             )
-        
     })
     .catch(err => { 
         console.log(err);
@@ -53,6 +57,8 @@ exports.updateUsuario = async function(usuario){
     });
 
 }
+
+
 
 exports.enviarNuevaPass = async function(usuario){
     const mails = require('../controllers/controllers_mails');

@@ -224,6 +224,19 @@ app.post('/actualizar', verificaToken.verificaTokenMiddleware, verificaRol.esAdm
     })
 })
 
+app.post('/cambiarPass', verificaToken.verificaTokenMiddleware, verificaRol.esAdministradorMiddleware, 
+    function (req, res) {
+    let result = usuarios.updatePass(req.body)
+    result.then(users => {
+        console.log(users);
+        res.send(users)
+    })
+    .catch(err => { 
+        console.log(err);
+        res.status(400).send('Error en al cambiar la cantrasena');
+        throw err;
+    })
+})
 
 module.exports = app;
 
