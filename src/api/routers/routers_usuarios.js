@@ -22,7 +22,7 @@ const  verificaToken  = require("../middlewares/verificaTokenMiddleware");
  *
  */
 
-app.get("/all", verificaToken.verificaTokenMiddleware, verificaRol.esAdministradorMiddleware,
+app.get("/all", verificaToken.verificaTokenMiddleware,
     function(req, res) {
     
     let result = usuarios.listarUsuarios()
@@ -87,8 +87,8 @@ app.get("/usuario", verificaToken.verificaTokenMiddleware, verificaRol.esAdminis
  *
  */
 app.get('/usuarioToken', verificaToken.verificaTokenMiddleware, function(req, res){
-    console.log(req.tokenDesencriptado.datostoken.username);
-        res.send(req.tokenDesencriptado.datostoken.usuario);  
+    console.log(req.tokenDesencriptado);
+        res.json(req.tokenDesencriptado);  
 })
 
 /**
@@ -233,7 +233,7 @@ app.post('/cambiarPass', verificaToken.verificaTokenMiddleware, verificaRol.esAd
     })
     .catch(err => { 
         console.log(err);
-        res.status(400).send('Error en al cambiar la cantrasena');
+        res.status(400).send('Error en al cambiar password');
         throw err;
     })
 })

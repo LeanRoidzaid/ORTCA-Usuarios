@@ -1,5 +1,6 @@
 const USUARIOS = require('../models/models_usuarios');
 
+const UserRoles = require('../models/models_usuario_rol')
 
 exports.buscarUsuario = async function(usuario){
 
@@ -11,7 +12,11 @@ exports.buscarUsuario = async function(usuario){
 
 exports.listarUsuarios = function(){
     return USUARIOS.findAll({ 
-        attributes: ['nombre', 'apellido'] 
+        attributes: ['id','nombre', 'apellido','dni','mail','usuario','fh_alta','fh_baja'] ,
+        include: [{
+            model: UserRoles//,
+           // attributes: ['idRol'] 
+        }]
     })
 }
 
