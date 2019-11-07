@@ -14,6 +14,11 @@ const  verificaToken  = require("../middlewares/verificaTokenMiddleware");
  *     description: Busca en Mysql a todos los usuario
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - in: query
+ *         name: token 
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: devuelve json con la busqueda
@@ -46,6 +51,16 @@ app.get("/all", verificaToken.verificaTokenMiddleware,
  *     description: Busca en Mysql los datos del usuario por el usuario
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - in: query
+ *         name: token 
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: usuario 
+ *         schema:
+ *           type: string
+
  *     responses:
  *       200:
  *         description: devuelve json con la busqueda
@@ -57,7 +72,7 @@ app.get("/all", verificaToken.verificaTokenMiddleware,
 app.get("/usuario", verificaToken.verificaTokenMiddleware, verificaRol.esAdministradorMiddleware,
     function(req, res) {
     
-    let result = usuarios.buscarUsuario(req.body.usuario)
+    let result = usuarios.buscarUsuario(req.query.usuario)
     result.then(users => {
         console.log(users);
         res.send(users)
@@ -79,6 +94,15 @@ app.get("/usuario", verificaToken.verificaTokenMiddleware, verificaRol.esAdminis
  *     description: devuelve el usuarios del token
  *     produces:
  *       - application/json
+ *     consumes:
+ *       - application/json
+ *     parameters:
+ *       - in: query    
+ *         name: token
+ *         schema:
+ *           type: string
+ *         required:
+ *           - token
  *     responses:
  *       200:
  *         description: devuelve json con el usuarios
@@ -87,8 +111,8 @@ app.get("/usuario", verificaToken.verificaTokenMiddleware, verificaRol.esAdminis
  *
  */
 app.get('/usuarioToken', verificaToken.verificaTokenMiddleware, function(req, res){
-    console.log(req.tokenDesencriptado);
-        res.json(req.tokenDesencriptado);  
+    console.log(req.tokenDesencriptado.datostoken);
+        res.json(req.tokenDesencriptado.datostoken);  
 })
 
 /**
@@ -102,6 +126,10 @@ app.get('/usuarioToken', verificaToken.verificaTokenMiddleware, function(req, re
  *     consumes:
  *       - application/json
  *     parameters:
+  *       - in: query
+ *         name: token 
+ *         schema:
+ *           type: string
  *       - name: body
  *         in: body
  *         schema:
@@ -120,6 +148,7 @@ app.get('/usuarioToken', verificaToken.verificaTokenMiddleware, function(req, re
  *               type: string 
  *             fh_alta:
  *               type: string
+ *               format: date
  *             fh_baja:
  *               type: string
  *             idCentro:
@@ -168,6 +197,10 @@ app.post('/alta', verificaToken.verificaTokenMiddleware, verificaRol.esAdministr
  *     consumes:
  *       - application/json
  *     parameters:
+ *       - in: query
+ *         name: token 
+ *         schema:
+ *           type: string
  *       - name: body
  *         in: body
  *         schema:
@@ -186,6 +219,7 @@ app.post('/alta', verificaToken.verificaTokenMiddleware, verificaRol.esAdministr
  *               type: string 
  *             fh_alta:
  *               type: string
+ *               format: date
  *             fh_baja:
  *               type: string
  *             idCentro:

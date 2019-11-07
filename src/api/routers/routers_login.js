@@ -16,11 +16,23 @@ const usuario = require('../controllers/controllers_usuarios');
  *     description: usuarios se logea y devuelve token con usuario y roles
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           properties:
+ *             usuario:
+ *               type: string 
+ *             pass:
+ *               type: string 
+ *         required:
+ *           - usuario
+ *           - pass
  *     responses:
  *       200:
- *         description: usuario logeado
- *       400:
- *         description: error en login
+ *         description: ok
+ *       401:
+ *         description: Usuario invalido o clave incorrecta
  *
  */
 
@@ -42,7 +54,7 @@ app.post("/",async function(req, res) {
         }]
     })
     .then(async (u) => {
-        if(u.usuario_roles.length != 0){
+        if(u != null && u.usuario_roles.length != 0){
         const roles = await Roles.findAll({
         where: {
           id: {
@@ -95,6 +107,19 @@ app.post("/",async function(req, res) {
  *     description: Se envia una pass provisoria por mail y el usuario debe volver a cambiarla
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - in: query
+ *         name: token 
+ *         schema:
+ *           type: string
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           properties:
+ *             usuario:
+ *               type: string 
+ *         required:
+ *           - usuario
  *     responses:
  *       200:
  *         description: nueva pass enviada

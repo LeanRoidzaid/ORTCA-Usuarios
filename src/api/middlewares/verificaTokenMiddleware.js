@@ -17,7 +17,7 @@ exports.verificaTokenMiddleware = async function(req, res, next) {
       if (err) {
         return res.status(401).json({ error: 'Token invalido, ingresar nuevamente a la aplicacion' });
       } else {
-        req.tokenDesencriptado =  datostoken;
+        req.tokenDesencriptado =  {datostoken};
       }
       next();
     });

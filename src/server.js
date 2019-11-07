@@ -27,7 +27,7 @@ const swaggerDefinition = {
     version: "1.0.0",
     description: "API USUARIOS - ELAISS"
   },
-  host: "localhost:" + process.env.PORT,
+  host: "localhost:3001" ,
   basePath: "/"
 };
 

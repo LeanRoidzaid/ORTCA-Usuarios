@@ -14,6 +14,11 @@ const  verificaToken  = require("../middlewares/verificaTokenMiddleware");
  *     description: Busca en Mysql a todos los roles disponibles
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - in: query
+ *         name: token 
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: devuelve json con la busqueda de todos lo roles
@@ -48,6 +53,10 @@ app.get("/all", verificaToken.verificaTokenMiddleware, verificaRol.esAdministrad
  *     consumes:
  *       - application/json
  *     parameters:
+ *       - in: query
+ *         name: token 
+ *         schema:
+ *           type: string
  *       - name: body
  *         in: body
  *         schema:
@@ -93,6 +102,10 @@ app.post('/asignarRoles', verificaToken.verificaTokenMiddleware, verificaRol.esA
  *     consumes:
  *       - application/json
  *     parameters:
+ *       - in: query
+ *         name: token 
+ *         schema:
+ *           type: string
  *       - name: body
  *         in: body
  *         schema:
