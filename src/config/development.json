@@ -3,7 +3,7 @@
     "PORT": 3001,
     "DB": {
         "name": "db_elaiss",
-        "host": "localhost",
+        "host": "db",
         "port": "3306",
         "user": "root",
         "password": "123456"
