@@ -48,7 +48,7 @@ app.get("/all", verificaToken.verificaTokenMiddleware,
  *   get:
  *     tags:
  *       - Buscar un usuario
- *     description: Busca en Mysql los datos del usuario por el usuario
+ *     description: Busca un usuario particualar en base a un dato.
  *     produces:
  *       - application/json
  *     parameters:
@@ -113,6 +113,7 @@ app.get("/usuario", verificaToken.verificaTokenMiddleware, verificaRol.esAdminis
 app.get('/usuarioToken', verificaToken.verificaTokenMiddleware, function(req, res){
     console.log(req.tokenDesencriptado.datostoken);
         res.json(req.tokenDesencriptado.datostoken);  
+        
 })
 
 /**

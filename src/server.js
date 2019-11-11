@@ -4,9 +4,17 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 
+
+
+
+
+
+
+
+
 // Env Config
 const config = require('./config/config');
-process.env.CLAVEJWT = "123456";
+
 
 // parse application/json
 app.use(bodyParser.json());
@@ -27,7 +35,7 @@ const swaggerDefinition = {
     version: "1.0.0",
     description: "API USUARIOS - ELAISS"
   },
-  host: "localhost:3001" ,
+  host: config.URLUsuarios ,
   basePath: "/"
 };
 
@@ -59,7 +67,14 @@ app.listen(config.PORT, function() {
   console.log(
     "Servidor express iniciado en el puerto " + config.PORT + "!"
     );
-  });
+  }).on('error', function(err){
+    console.log('on error handler');
+    console.log(err);
+});
+process.on('uncaughtException', function(err) {
+  console.log('process.on handler');
+  console.log(err);
+});
   
 //DEBO EXPORTAR app PARA LOS TEST EN MOCHA, solo para eso, por ahora queda comentado
 module.exports = app;

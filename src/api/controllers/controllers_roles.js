@@ -20,10 +20,10 @@ exports.asignarRoles = function(usuarioRol){
     
     return USUARIOROL.sequelize.transaction(function (t) { 
         var promises = []; 
-        for (var i = 0; i < usuarioRol.idRol.length; i++) {
-            var newPromise = USUARIOROL.create({idUsuario: usuarioRol.idUsuario, idRol: members[i]}); 
+        //for (var i = 0; i < usuarioRol.idRol.length; i++) {
+            var newPromise = USUARIOROL.create({idUsuario: usuarioRol.idUsuario, idRol: members}); 
             promises.push(newPromise); 
-        }; 
+        //}; 
     });
 }
 

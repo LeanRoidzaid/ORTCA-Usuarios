@@ -3,9 +3,12 @@
     "PORT": 3001,
     "DB": {
         "name": "db_elaiss",
-        "host": "db",
+        "host": "0.0.0.0",
         "port": "3306",
-        "user": "root",
+        "user": "elaiss_app",
         "password": "123456"
-    }
+    },
+    "URLUsuarios" : "http://localhost:3001",
+    "URLFe" : "http://localhost:3000"
+
 }

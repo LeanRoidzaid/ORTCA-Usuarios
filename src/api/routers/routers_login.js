@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt');
 const UserRoles = require('../models/models_usuario_rol')
 const Roles = require('../models/models_roles')
 const usuario = require('../controllers/controllers_usuarios');
+const config = require('../../config/config');
 /**
  * @swagger
  * /api/login:
@@ -71,7 +72,9 @@ app.post("/",async function(req, res) {
     })
     .then(user => {
         if (!user) {
-          res.send('Incorrect user');
+          res.status(401).send({
+            error: "usuario o contraseña inválidos"
+          });
 
           return;
         } else {
@@ -82,11 +85,13 @@ app.post("/",async function(req, res) {
               //return;
               
               const tokenData = { username: user, roles, ultimoLogin:new Date() };
-              const token = jwt.sign(tokenData, String(process.env.CLAVEJWT), {
+              //const token = jwt.sign(tokenData, String(process.env.CLAVEJWT), {
+                const token = jwt.sign(tokenData, String(config.CLAVEJWT), {
                 expiresIn: 60 * 60 * 24 // expira en 24 horas
               });
                     
               res.status(200).send({ token });
+              
             } else {
               res.status(401).send({
                 error: "usuario o contraseña inválidos"
