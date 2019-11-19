@@ -1,12 +1,12 @@
 const express = require("express");
 const app = express();
 var jwt = require("jsonwebtoken");
-const Sequelize = require('sequelize')
+const sequelize = require('../../config/dbConnection');
 const usuarios = require('../models/models_usuarios');
 const bcrypt = require('bcrypt');
 const UserRoles = require('../models/models_usuario_rol')
 const Roles = require('../models/models_roles')
-const usuario = require('../controllers/controllers_usuarios');
+const usuarioController = require('../controllers/controllers_usuarios');
 const config = require('../../config/config');
 /**
  * @swagger
@@ -37,70 +37,46 @@ const config = require('../../config/config');
  *
  */
 
-app.post("/",async function(req, res) {
+app.post("/", async  function(req, res) {
+  //res.header("Access-Control-Allow-Origin", "*");
+  console.log("login paso1");
   const { usuario, pass } = req.body
-  if (!usuario || !pass) {
+
+  //const passEncripts =  bcrypt.hashSync(pass, 2);
+
+  try{
+    console.log("login paso2");
+    var user = await usuarioController.login(usuario,pass);
+    const passUsuario = user.pass;
+
+
+    
+
+    console.log("Paso controller 3.0 "+passUsuario);     
+
+    console.log("Paso controller 3"+user);
+
+    var roles = user.usuario_roles;
+    const tokenData = { username: user, roles, ultimoLogin:new Date() };
+
+    const token =   jwt.sign(tokenData, String(config.CLAVEJWT), {
+    expiresIn: 60 * 60 * 24 // expira en 24 horas
+    });
+
+    res.status(200).send({ token });
+        
+
+  }catch(error){
+    console.log("login catch "+error);
     res.status(401).send({
-      error: "usuario y pass son requeridos."
-    })
-  } else {
-    usuarios
-    .findOne({
-        // attributes: ['discoverySource'],
-        where: {
-          usuario: req.body.usuario
-        },
-        include: [{
-            model: UserRoles,
-        }]
-    })
-    .then(async (u) => {
-        if(u != null && u.usuario_roles.length != 0){
-        const roles = await Roles.findAll({
-        where: {
-          id: {
-            [Sequelize.Op.in]: (u.usuario_roles || []).map(ur => String(ur.idRol))
-          }
-        }
-      })
-
-      u.roles = roles
-      u.jo = 1
-
-      return Promise.resolve(u)
-        }
-    })
-    .then(user => {
-        if (!user) {
-          res.status(401).send({
-            error: "usuario o contraseña inválidos"
-          });
-
-          return;
-        } else {
-          const roles = user.roles
-          bcrypt.compare(req.body.pass, user.pass, function (err, result) {
-            if (result == true) {
-              //res.send('login correcto');
-              //return;
-              
-              const tokenData = { username: user, roles, ultimoLogin:new Date() };
-              //const token = jwt.sign(tokenData, String(process.env.CLAVEJWT), {
-                const token = jwt.sign(tokenData, String(config.CLAVEJWT), {
-                expiresIn: 60 * 60 * 24 // expira en 24 horas
-              });
-                    
-              res.status(200).send({ token });
-              
-            } else {
-              res.status(401).send({
-                error: "usuario o contraseña inválidos"
-              });
-            }
-          });    
-      };
+      error: error
     });
   }
+ 
+
+
+
+
 });
 
 /**
@@ -135,7 +111,7 @@ app.post("/",async function(req, res) {
 
 app.post("/recuperarPass",async function(req, res) {
 
-    let result = usuario.enviarNuevaPass(req.body.usuario);
+    let result = usuarioController.enviarNuevaPass(req.body.usuario);
     result.then(mail => {
         console.log("se envio un mail al usuario: " + req.body.usuario);
         res.send("se envio un mail al usuario: " + req.body.usuario);

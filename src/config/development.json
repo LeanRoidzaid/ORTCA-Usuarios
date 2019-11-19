@@ -8,7 +8,7 @@
         "user": "elaiss_app",
         "password": "123456"
     },
-    "URLUsuarios" : "http://localhost:3001",
-    "URLFe" : "http://localhost:3000"
+    "URLUsuarios" : "localhost:3001",
+    "URLFe" : "localhost:3000"
 
 }

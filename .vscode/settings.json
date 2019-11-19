@@ -1,0 +1,13 @@
+{
+    "sqltools.connections": [
+        {
+            "database": "db_elaiss",
+            "dialect": "MySQL",
+            "name": "db_elaiss",
+            "password": "123456",
+            "port": 3306,
+            "server": "0.0.0.0",
+            "username": "elaiss_app"
+        }
+    ]
+}

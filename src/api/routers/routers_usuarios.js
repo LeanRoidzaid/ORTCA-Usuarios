@@ -30,9 +30,9 @@ const  verificaToken  = require("../middlewares/verificaTokenMiddleware");
 app.get("/all", verificaToken.verificaTokenMiddleware,
     function(req, res) {
     
-    let result = usuarios.listarUsuarios()
+    var result = usuarios.listarUsuarios()
     result.then(users => {
-        console.log(users);
+        //console.log(users);
         res.send(users)
          
     })
@@ -174,17 +174,45 @@ app.get('/usuarioToken', verificaToken.verificaTokenMiddleware, function(req, re
  */
 
 app.post('/alta', verificaToken.verificaTokenMiddleware, verificaRol.esAdministradorMiddleware,
-    function (req, res) {
-    let result = usuarios.insertarUsuario(req.body)
-    result.then(users => {
-        console.log(users);
-        res.send(users)
-         
-    })
-    .catch(err => {
-        console.log(err);
-        res.status(400).send('Error en el insert de usuario' + err.message);
-    })
+    async function (req, res) {
+        console.log("alta1");
+        console.log(req.body);
+        try{
+            console.log("altaAntes insert");
+            /*
+            usuarios.insertarUsuario(req.body).then(users => {
+                ///console.log(req.body);
+                console.log("alta2");
+                console.log("user: "+users);
+                res.send(users);
+                
+            })
+            .catch(err => {
+                console.log("alta3");
+                console.log("Error"+err);
+                res.status(400).send('Error en el insert de usuario' + err.message);
+            })*/
+            await usuarios.insertarUsuario(req.body);
+            await usuarios.enviarNuevaPass(req.body);
+            res.status(200).send();
+            /*
+            result.then(users => {
+                ///console.log(req.body);
+                console.log("alta2");
+                //console.log(users);
+                res.send(users);
+                
+            })
+            .catch(err => {
+                console.log("alta3");
+                console.log("Error"+err);
+                res.status(400).send('Error en el insert de usuario' + err.message);
+            })
+            */
+        }catch(error)
+        {
+            console.log("Router: "+error);
+        }
 })
     
 /**

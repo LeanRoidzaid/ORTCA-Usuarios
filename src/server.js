@@ -5,13 +5,6 @@ const app = express();
 const bodyParser = require('body-parser');
 
 
-
-
-
-
-
-
-
 // Env Config
 const config = require('./config/config');
 

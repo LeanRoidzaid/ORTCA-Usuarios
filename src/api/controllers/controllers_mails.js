@@ -1,8 +1,9 @@
 var nodemailer = require('nodemailer');
 // email sender function
-exports.sendEmail = function(usuario, asunto, texto){
+exports.sendEmail = async function(usuario, asunto, texto){
+    console.log("mail1");
 // Definimos el transporter
-    var transporter = nodemailer.createTransport({
+    var transporter = await nodemailer.createTransport({
         host: 'smtp.gmail.com',
         port: 587,
         secure: false,
@@ -14,21 +15,16 @@ exports.sendEmail = function(usuario, asunto, texto){
         }
         
     });
-    
+    console.log("mail2");
     // Definimos el email
-    var mailOptions = {
+    var mailOptions = await {
         from: "elaiss2019@gmail.com",
         to: usuario.mail,
         subject: asunto,
         text: texto
     };
+    console.log("mail3");
     // Enviamos el email
-    transporter.sendMail(mailOptions, function(error, info){
-        if (error) {
-            console.log("ERROR!!!!!!", error);
-          } else {
-            console.log('Email sent: ' + info.response);
-          }
-    });
-
+    await transporter.sendMail(mailOptions);
+    console.log("mail4");
 };
