@@ -25,6 +25,6 @@ exports.sendEmail = async function(usuario, asunto, texto){
     };
     console.log("mail3");
     // Enviamos el email
-    await transporter.sendMail(mailOptions);
+    transporter.sendMail(mailOptions);
     console.log("mail4");
 };

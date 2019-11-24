@@ -8,6 +8,7 @@ const UserRoles = require('../models/models_usuario_rol')
 const Roles = require('../models/models_roles')
 const usuarioController = require('../controllers/controllers_usuarios');
 const config = require('../../config/config');
+
 /**
  * @swagger
  * /api/login:
@@ -37,7 +38,7 @@ const config = require('../../config/config');
  *
  */
 
-app.post("/", async  function(req, res) {
+app.post("/", async function(req, res) {
   //res.header("Access-Control-Allow-Origin", "*");
   console.log("login paso1");
   const { usuario, pass } = req.body
@@ -47,23 +48,33 @@ app.post("/", async  function(req, res) {
   try{
     console.log("login paso2");
     var user = await usuarioController.login(usuario,pass);
+    console.log("Linea 51" + user);
     const passUsuario = user.pass;
 
 
-    
+   // var esok =  bcrypt.compareSync(passUsuario ,user.pass); 
+    //var esok = await bcrypt.compare(passUsuario ,user.pass); 
+    //console.log(esok);
+      if (typeof user !== 'undefined') {
 
-    console.log("Paso controller 3.0 "+passUsuario);     
+      console.log("Paso controller 3.0 "+passUsuario);     
 
-    console.log("Paso controller 3"+user);
+      console.log("Paso controller 3"+user);
 
-    var roles = user.usuario_roles;
-    const tokenData = { username: user, roles, ultimoLogin:new Date() };
+      var roles = user.usuario_roles;
+      const tokenData = { username: user, roles, ultimoLogin:new Date() };
 
-    const token =   jwt.sign(tokenData, String(config.CLAVEJWT), {
-    expiresIn: 60 * 60 * 24 // expira en 24 horas
-    });
+      const token =   jwt.sign(tokenData, String(config.CLAVEJWT), {
+      expiresIn: 60 * 60 * 24 // expira en 24 horas
+      });
 
-    res.status(200).send({ token });
+      res.status(200).send({ token });
+          return user;    
+      }
+      else{
+        throw Error("Usuario invalido");
+      } 
+
         
 
   }catch(error){

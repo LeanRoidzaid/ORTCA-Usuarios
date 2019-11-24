@@ -16,7 +16,18 @@ exports.login = async function(usuario,passParam){
     if (!usuario || !passParam) {
         throw (Error("Usuario y Password son campos obligatorios"))
     } else {
-    var user= await USUARIOS.findOne({
+
+       
+
+
+
+
+    
+        
+
+
+        
+    var usuario= await USUARIOS.findOne({
           // attributes: ['discoverySource'],
           where: {
             usuario: usuario
@@ -25,22 +36,61 @@ exports.login = async function(usuario,passParam){
 
           },
           include: [{
-              model: UserRoles,
+              model: UserRoles
           }]
         });
+
+
+    console.log(usuario.validPassword(passParam));
+    return usuario; 
+        /*
+        .then(usuario=>{
+            if (typeof usuario !== 'undefined') {
+                console.log("User: "+ usuario.pass +" Param: "+passParam );
+                //console.log(any_hmac_md5(passParam,'base-64'));
+                await bcrypt.compare(passParam ,usuario.pass ).then(esok=>{
+                    if(typeof esok !== 'undefined' && esok == true){
+                        return usuario; 
+                    }
+                    throw Error("Usuario invalido");
+
+                });
+
+                // the variable is defined
+                
+            }
+            throw Error("Usuario invalido");
+        });
+       
+       if (typeof usuario !== 'undefined') {
+            console.log("User: "+ usuario.pass +" Param: "+passParam );
+            //console.log(any_hmac_md5(passParam,'base-64'));
+            await bcrypt.compare(passParam ,usuario.pass ).then(esok=>{
+                if(typeof esok !== 'undefined' && esok == true){
+                    return usuario; 
+                }
+                throw Error("Usuario invalido");
+
+            });
+
+        // the variable is defined
         
+        }
+         */
+        throw Error("Usuario invalido");
    
     }
-    console.log("User: "+ user.pass +" Param: "+passParam );
-    var esok = await bcrypt.compareSync(passParam ,user.pass);
-    console.log("esok: "+ esok );
+
+    //var esok = 
+  // console.log("esok: "+ esok );
+/*
     if(esok){
         return user;    
     }
     else{
         throw Error("Usuario invalido");
     }
-    
+  */  
   
 }
 exports.listarUsuarios = function(){
@@ -178,4 +228,5 @@ function generatePasswordRand(length,type) {
     }
     return pass;
 }
+
 

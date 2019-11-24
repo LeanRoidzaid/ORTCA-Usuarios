@@ -193,8 +193,8 @@ app.post('/alta', verificaToken.verificaTokenMiddleware, verificaRol.esAdministr
                 res.status(400).send('Error en el insert de usuario' + err.message);
             })*/
             await usuarios.insertarUsuario(req.body);
-            await usuarios.enviarNuevaPass(req.body);
-            res.status(200).send();
+            usuarios.enviarNuevaPass(req.body);
+            res.send();
             /*
             result.then(users => {
                 ///console.log(req.body);
@@ -211,6 +211,7 @@ app.post('/alta', verificaToken.verificaTokenMiddleware, verificaRol.esAdministr
             */
         }catch(error)
         {
+            res.status(201).send();
             console.log("Router: "+error);
         }
 })

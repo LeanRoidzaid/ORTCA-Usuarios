@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize')
 const sequelize = require('../../config/dbConnection');
-//const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 const Roles = require('./models_usuario_rol')
 
 const Usuario = sequelize.define('usuarios', {
@@ -16,8 +16,13 @@ const Usuario = sequelize.define('usuarios', {
      fh_alta: Sequelize.DATE,
      fh_baja: Sequelize.DATE,
      idCentro: Sequelize.INTEGER,
-     },{timestamps: false});
-
+     },{timestamps: false 
+    }
+     
+     );
+     Usuario.prototype.validPassword = function (password) {
+      console.log("password: "+ password +" this.pass: "+this.pass );
+      return bcrypt.compareSync(password, this.pass);}
      /*
 
      Usuario.beforeCreate((usuarios, options) => {
@@ -36,6 +41,21 @@ const Usuario = sequelize.define('usuarios', {
 */
 
 Usuario.hasMany(Roles, { foreignKey: 'idUsuario' });
+
+Usuario.authenticate = async function(username, password) {
+
+  const user = await Usuario.findOne({ where: { usuario:username } });
+
+  // bcrypt is a one-way hashing algorithm that allows us to 
+  // store strings on the database rather than the raw
+  // passwords. Check out the docs for more detail
+  console.log("password: " + password +" user.password: "+ user.pass);
+  if (bcrypt.compareSync(password, user.pass)) {
+    return true;
+  }
+
+  throw new Error('invalid password');
+}
 
 
 
