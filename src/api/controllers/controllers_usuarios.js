@@ -39,10 +39,15 @@ exports.login = async function(usuario,passParam){
               model: UserRoles
           }]
         });
+    
 
+        var esValido = await usuario.validPassword(passParam)
+        if (esValido){
+            return usuario; 
+        }
 
-    console.log(usuario.validPassword(passParam));
-    return usuario; 
+        throw  Error("Usuario invalido");
+  
         /*
         .then(usuario=>{
             if (typeof usuario !== 'undefined') {

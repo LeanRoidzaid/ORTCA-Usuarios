@@ -20,9 +20,9 @@ const Usuario = sequelize.define('usuarios', {
     }
      
      );
-     Usuario.prototype.validPassword = function (password) {
+     Usuario.prototype.validPassword = async function (password) {
       console.log("password: "+ password +" this.pass: "+this.pass );
-      return bcrypt.compareSync(password, this.pass);}
+      return await bcrypt.compare(password, this.pass);}
      /*
 
      Usuario.beforeCreate((usuarios, options) => {
