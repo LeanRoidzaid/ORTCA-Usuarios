@@ -123,8 +123,8 @@ exports.updateUsuario = async function(usuario){
 
 exports.updatePass = async function(usuario){
     const bcrypt = require('bcrypt');
-    var asunto = "Envio de contrasena";
-    var texto = "por favor ingrese con las seguientes credenciales usuario: "+usuario.usuario+" pass: " + usuario.pass;
+    var asunto = "Acceso Elaiss";
+    var texto = "Por favor ingrese con las seguientes credenciales usuario: "+usuario.usuario+" pass: " + usuario.pass;
     console.log("enviarNuevaPass 4");
     await mails.sendEmail(usuario, asunto, texto);
     var hash = await bcrypt.hashSync(usuario.pass, 2);
@@ -171,6 +171,15 @@ exports.enviarNuevaPass = async function(usuario){
    console.log("enviarNuevaPass 3");
 
 }
+
+
+exports.eliminar = async function (idusuario) {
+    console.log("enviarNuevaPass 1");
+await USUARIOS.destroy({where:{ id:idusuario}})
+
+}
+
+
 
 exports.insertarUsuario = async function(usuario){
     console.log("en el insert");

@@ -27,7 +27,7 @@ const  verificaToken  = require("../middlewares/verificaTokenMiddleware");
  *
  */
 
-app.get("/all", verificaToken.verificaTokenMiddleware,
+app.get("/all", verificaToken.verificaTokenMiddleware,verificaRol.esAdministradorMiddleware,
     function(req, res) {
     
     var result = usuarios.listarUsuarios()
@@ -194,7 +194,7 @@ app.post('/alta', verificaToken.verificaTokenMiddleware, verificaRol.esAdministr
             })*/
             await usuarios.insertarUsuario(req.body);
             usuarios.enviarNuevaPass(req.body);
-            res.send();
+            res.json({"respuesta": true}).send();
             /*
             result.then(users => {
                 ///console.log(req.body);
@@ -209,9 +209,10 @@ app.post('/alta', verificaToken.verificaTokenMiddleware, verificaRol.esAdministr
                 res.status(400).send('Error en el insert de usuario' + err.message);
             })
             */
+           res.status(200).send();
         }catch(error)
         {
-            res.status(201).send();
+            res.status(301).json({"error":error.message}).send();
             console.log("Router: "+error);
         }
 })
@@ -290,10 +291,12 @@ app.post('/actualizar', verificaToken.verificaTokenMiddleware, verificaRol.esAdm
 
 app.post('/cambiarPass', verificaToken.verificaTokenMiddleware, verificaRol.esAdministradorMiddleware, 
     function (req, res) {
-    let result = usuarios.updatePass(req.body)
+    var usuario={ usuario:req.body.id};
+
+    let result = usuarios.enviarNuevaPass(usuario)
     result.then(users => {
         console.log(users);
-        res.send(users)
+        res.json({users}).send();
     })
     .catch(err => { 
         console.log(err);
@@ -302,5 +305,23 @@ app.post('/cambiarPass', verificaToken.verificaTokenMiddleware, verificaRol.esAd
     })
 })
 
+
+
+
+app.post('/eliminar', verificaToken.verificaTokenMiddleware, verificaRol.esAdministradorMiddleware, 
+    function (req, res) {
+    var usuario={ usuario:req.body.id};
+
+    let result = usuarios.eliminar(usuario)
+    result.then(users => {
+      // console.log(users);
+        res.json({status:"ok"}).send();
+    })
+    .catch(err => { 
+     //   console.log(err);
+        res.status(400).send('Error en al cambiar password');
+        throw err;
+    })
+})
 module.exports = app;
 
