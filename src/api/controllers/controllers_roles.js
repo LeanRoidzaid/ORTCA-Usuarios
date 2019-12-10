@@ -15,16 +15,16 @@ exports.buscarRolesUsuario = function(idUsuario){
     });
 };
 
-exports.asignarRoles = function(usuarioRol){
-    var members = usuarioRol.idRol; 
+exports.asignarRoles = async function(usuarioRol){
+    await USUARIOROL.destroy({where:{idUsuario:usuarioRol[0].idUsuario}});
     
-    return USUARIOROL.sequelize.transaction(function (t) { 
-        var promises = []; 
-        //for (var i = 0; i < usuarioRol.idRol.length; i++) {
-            var newPromise = USUARIOROL.create({idUsuario: usuarioRol.idUsuario, idRol: members}); 
-            promises.push(newPromise); 
-        //}; 
-    });
+    for(var usuario of usuarioRol)
+        
+     await USUARIOROL.create({idUsuario: usuario.idUsuario, idRol: usuario.idRol}); 
+     
+       
+ 
+    return;
 }
 
 exports.quitarRol = function(usuarioRol){
