@@ -17,7 +17,7 @@
     "chai-http": "^4.3.0",
     "cookie-parser": "^1.4.4",
     "ejs": "^2.7.1",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-static": "^1.2.6",
     "fs": "0.0.1-security",
     "jsonwebtoken": "^8.5.1",
