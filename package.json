@@ -21,7 +21,7 @@
     "express-static": "^1.2.6",
     "fs": "0.0.1-security",
     "jsonwebtoken": "^8.5.1",
-    "mocha": "^6.2.0",
+    "mocha": "^10.2.0",
     "mysql": "^2.17.1",
     "mysql-model": "git://github.com/michalkow/node-mysql-model.git",
     "mysql2": "^1.7.0",
